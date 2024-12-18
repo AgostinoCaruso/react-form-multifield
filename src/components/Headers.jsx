@@ -1,9 +1,9 @@
-function Header(){
-    return(
-        <header>
-            <h1>Prova</h1>
-        </header>
-    );
-}
+// function Header(){
+//     return(
+//         <header>
+//             <h1>Prova</h1>
+//         </header>
+//     );
+// }
 
-export default Header;
+// export default Header;

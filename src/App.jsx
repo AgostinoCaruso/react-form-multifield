@@ -6,16 +6,84 @@ BONUS:
 */
 
 
-
+import { useState } from 'react';
 import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const initialPost = {
+  title: "",
+  author: "",
+  status: false,
+};
+
 function App() {
-  const [count, setCount] = useState(0)
+
+
+  const [formData, setFormData] = useState({ initialPost });
+  const [cards, setCards] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(e.target);
+    setCards([...cards, formData]);
+
+  }
+  const handleInput = (e) => {
+    console.log(e.target.value);
+    setFormData({ ...formData, title: e.target.value });
+  }
+
+  const handleRemove = (e) => {
+    console.log(e.target.closest("li"));
+    const cardId = e.target.closest("li").id;
+    const newCards = cards.filter((card, index) => !index == cardId);
+    setCards(newCards);
+  }
 
   return (
     <>
-      
+      <header className='bg-warning'>
+        <h1>Header</h1>
+      </header>
+      <main>
+        <section className='bg-success'>
+          <form action="#" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className=''
+              onChange={handleInput}
+              value={formData.title}
+              placeholder='title'
+            />
+            <input
+              type="text"
+              className=''
+              onChange={handleInput}
+              value={formData.author}
+              placeholder='author'
+            />
+            <input
+              type="checkbox"
+              className=''
+              onChange={handleInput}
+              value={formData.status}              
+            />
+            <label htmlFor=""></label>
+          </form>
+        </section>
+        <section >
+          <ul className='d-flex'>
+            {cards.map((card, index) => (
+              <li key={index} id={index}>
+                <div className='mx-3 p-3 bg-danger'>
+                  <span>Titolo: {card.title}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main >
     </>
   )
 }

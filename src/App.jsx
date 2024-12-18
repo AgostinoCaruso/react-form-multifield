@@ -1,12 +1,5 @@
-/*
-Ampliare l'esercizio precedente aggiungendo, nel form, i campi per immagine, contenuto, categoria (select), tags (lista di checkbox) e uno stato per pubblicare o meno l'articolo.
-Utilizzare un unico oggetto per gestire tutti i dati del form.
-BONUS:
-1. Aggiungere uno useEffect che mostri un alert quando l’utente clicca sull’apposita checkbox per pubblicare un articolo.
-*/
 
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -19,7 +12,7 @@ const initialPost = {
 function App() {
 
 
-  const [formData, setFormData] = useState({ initialPost });
+  const [formData, setFormData] = useState( initialPost );
   const [cards, setCards] = useState([]);
 
   const handleSubmit = (e) => {
@@ -27,17 +20,28 @@ function App() {
 
     console.log(e.target);
     setCards([...cards, formData]);
+    setFormData(initialPost);
+  }
+
+  //qui tiene traccia di tutti i cambiamenti dentro gli input form in base al tipo
+  const handleChangeInput = (e) => {
+    const { type, name, value, checked } = e.target;
+
+    const key = name;
+    const val = type == "checkbox" ? checked : value;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [key]: val,
+    }));
 
   }
-  const handleInput = (e) => {
-    console.log(e.target.value);
-    setFormData({ ...formData, title: e.target.value });
-  }
+
 
   const handleRemove = (e) => {
     console.log(e.target.closest("li"));
     const cardId = e.target.closest("li").id;
-    const newCards = cards.filter((card, index) => !index == cardId);
+    const newCards = cards.filter((card, index) => index != cardId);
     setCards(newCards);
   }
 
@@ -47,37 +51,46 @@ function App() {
         <h1>Header</h1>
       </header>
       <main>
+
         <section className='bg-success'>
           <form action="#" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="title"
               className=''
-              onChange={handleInput}
+              onChange={handleChangeInput}
               value={formData.title}
               placeholder='title'
             />
             <input
               type="text"
+              name="author"
               className=''
-              onChange={handleInput}
+              onChange={handleChangeInput}
               value={formData.author}
               placeholder='author'
             />
+            <label htmlFor="">Pubblicato?</label>
             <input
               type="checkbox"
+              name="status"
               className=''
-              onChange={handleInput}
-              value={formData.status}              
+              onChange={handleChangeInput}
+              checked={formData.status}
             />
-            <label htmlFor=""></label>
+            <button type='submit' className='bg-primary'>Invia</button>
           </form>
         </section>
+
         <section >
-          <ul className='d-flex'>
+          <ul className='d-flex flex-wrap'>
             {cards.map((card, index) => (
-              <li key={index} id={index}>
-                <div className='mx-3 p-3 bg-danger'>
+              <li key={index} id={index} className='d-flex my-2'>
+                <div className='mx-3 p-3 bg-danger d-flex flex-column'>
                   <span>Titolo: {card.title}</span>
+                  <span>Autore: {card.author}</span>
+                  <span>Pubblicato: {card.status ? "pubblicato" : "bozza"}</span>
+                  <span onClick={handleRemove} className='btn-delete text-center'>X</span>
                 </div>
               </li>
             ))}

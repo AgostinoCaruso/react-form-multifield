@@ -1,3 +1,9 @@
 ul{
   list-style: none;
 }
+.btn-delete{
+  transition: transform .5s ease-in-out;
+}
+.btn-delete:hover{
+  transform: scale(1.1);
+}
